@@ -12,7 +12,7 @@
 }
 .text-input{
   padding: 2%;
-  width: 25%;
+  width: 420px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -34,12 +34,16 @@
   border: none;
   border-radius: 50%;
   background-color: white;
+  outline: none;
+  cursor: pointer;
 }
 .display-none{
   display: none;
 }
 .todo-list{
-  width: 45%;
+  width: 45rem;
+  max-height: 70vh;
+  overflow: auto;
   margin-top: 10px;
   padding: 10px 10px;
   background-color: white;
@@ -86,6 +90,7 @@
 .todo-item i{
   padding: 10px;
   font-size: 24px;
+  color: blue;
 }
 .todo-content{
   margin-left: 5px;

@@ -10,6 +10,7 @@ import {
   IconButton,
   CardActions,
   List,
+  Checkbox
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
@@ -22,7 +23,7 @@ function App() {
   const addTodo = () => {
     setTodoList([
       ...todoList,
-      { id: Date.now(), text: todo, status: "true", date: date },
+      { id: Date.now(), text: todo, status: "true", date: date, completed: "false"  },
     ]);
   };
 
@@ -55,9 +56,21 @@ function App() {
         <div className="todo-list">
           <List>
             {todoList.map((item) => {
-              if (item.status === "true") {
+              if (item.status === "true" && item.completed === "false") {
                 return (
                   <Card className="todo-item" sx={{ minWidth: 275 }}>
+                    <CardActions>
+                    <Checkbox onChange={(e)=>{
+                      setTodoList(
+                        todoList.filter((obj)=>{
+                          if (obj.id===item.id){
+                            obj.completed="true"
+                          }
+                          return obj
+                        })
+                      )
+                    }} />
+                    </CardActions>
                     <CardContent className="todo-content">
                       <Typography variant="h5" component="div">
                         {item.text}

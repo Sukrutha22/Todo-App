@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 
+
+
 function App() {
   const [todo, setTodo] = useState("");
   const [todoList, setTodoList] = useState([0]);
@@ -11,7 +13,7 @@ function App() {
   };
 
   useEffect(() => {
-    const today = new Date()
+    const today = new Date();
     setDate(today.toDateString());
   }, [todo]);
 

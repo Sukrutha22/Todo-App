@@ -3,8 +3,9 @@
   height: 100vh;
   background-color: rgb(71, 120, 211);
   display: flex;
-    justify-content: center;
-    align-items: center;
+  justify-content: center;
+  align-items: center;
+  font-family: "Roboto-Thin";
 }
 .todo-container {
   display: flex;
@@ -26,7 +27,7 @@
 .text-input input {
   padding: 15px;
   width: 80%;
-  border: 1px solid rgb(128, 128, 128,0.2);
+  border: 1px solid rgb(128, 128, 128, 0.2);
   border-radius: 10px;
   outline: none;
 }
@@ -42,7 +43,7 @@
   border-radius: 50%;
   color: white;
   background-color: rgb(71, 120, 211);
-    outline: none;
+  outline: none;
   cursor: pointer;
 }
 .display-none {
@@ -160,3 +161,4 @@
     font-size: 12px;
   }
 }
+

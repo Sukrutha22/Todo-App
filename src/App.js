@@ -1,5 +1,18 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import {
+  Paper,
+  TextField,
+  Fab,
+  Card,
+  CardContent,
+  Typography,
+  IconButton,
+  CardActions,
+  List,
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
 
 function App() {
   const [todo, setTodo] = useState("");
@@ -7,47 +20,55 @@ function App() {
   const [date, setDate] = useState("");
 
   const addTodo = () => {
-    setTodoList([...todoList, { id: Date.now(), text: todo, status: "true" }]);
+    setTodoList([
+      ...todoList,
+      { id: Date.now(), text: todo, status: "true", date: date },
+    ]);
   };
 
   useEffect(() => {
-    const today = new Date()
+    const today = new Date();
     setDate(today.toDateString());
   }, [todo]);
 
   return (
     <div className="App">
-      <div className="todo-container">
+      <Paper className="todo-container" elevation={15}>
         <div className="text-input">
-          <input
+          <TextField
+            className="text-field"
+            id="outlined-basic"
+            label="Add Todo"
+            variant="outlined"
             onChange={(e) => setTodo(e.target.value)}
-            type="text"
-            placeholder="Add todo"
           />
-          <button
+          <Fab
+            color="primary"
+            aria-label="add"
             onClick={() => {
               addTodo();
             }}
           >
-            <i className="fa fa-plus"></i>
-          </button>
+            <AddIcon />
+          </Fab>
         </div>
         <div className="todo-list">
-          <ul>
+          <List>
             {todoList.map((item) => {
               if (item.status === "true") {
                 return (
-                  <li>
-                    <div className="todo-item">
-                      <div className="todo-content">
-                        <p className="todo-text">
-                          <b>{item.text}</b>
-                        </p>
-                        <p className="todo-date">{date}</p>
-                      </div>
-
-                      <i
-                        className="fa fa-minus	"
+                  <Card className="todo-item" sx={{ minWidth: 275 }}>
+                    <CardContent className="todo-content">
+                      <Typography variant="h5" component="div">
+                        {item.text}
+                      </Typography>
+                      <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                        {item.date}
+                      </Typography>
+                    </CardContent>
+                    <CardActions>
+                      <IconButton
+                        aria-label="delete"
                         onClick={(e) => {
                           setTodoList(
                             todoList.filter((obj) => {
@@ -58,16 +79,18 @@ function App() {
                             })
                           );
                         }}
-                      ></i>
-                    </div>
-                  </li>
+                      >
+                        <DeleteOutlined color="primary" />
+                      </IconButton>
+                    </CardActions>
+                  </Card>
                 );
               }
               return null;
             })}
-          </ul>
+          </List>
         </div>
-      </div>
+      </Paper>
     </div>
   );
 }

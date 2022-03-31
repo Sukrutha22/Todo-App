@@ -24,30 +24,30 @@ function App() {
   const addTodo = (e) => {
     e.preventDefault();
     Firebase.firestore().collection("todos").add({
-      
       text: todo,
-      status: "true",
       completed: "false",
       date: date,
     });
-    Firebase.firestore().collection('todos').get().then((snapshot) => {
-      const allTodo = snapshot.docs.map((item) => {
-        console.log(item.data())
-        return {
-          ...item.data(),
-          id: item.id
-        }
-      })
-      console.log(allTodo);
-      setTodoList(allTodo)
-    })
-
   };
 
   useEffect(() => {
     const today = new Date();
     setDate(today.toDateString());
-  }, [todo]);
+    Firebase.firestore()
+      .collection("todos")
+      .get()
+      .then((snapshot) => {
+        const allTodo = snapshot.docs.map((item) => {
+          console.log(item.data());
+          return {
+            ...item.data(),
+            id: item.id,
+          };
+        });
+        console.log(allTodo);
+        setTodoList(allTodo);
+      });
+  });
 
   return (
     <div className="App">
@@ -69,54 +69,55 @@ function App() {
           <div className="todo-list">
             <h2>Active Task</h2>
             <List>
-              <Typography variant="h6" className={todoList.length ? "display-none" : "display"}>No Task Yet</Typography>
+              <Typography
+                variant="h6"
+                className={todoList.length ? "display-none" : "display"}
+              >
+                No Task Yet
+              </Typography>
               {todoList.map((item) => {
-                if (item) {
-                  if (item.status === "true" && item.completed === "false") {
-                    return (
-                      <Card className="todo-item" sx={{ minWidth: 275 }}>
-                        <CardActions>
-                          <Checkbox
-                            onChange={(e) => {
-                              setTodoList(
-                                todoList.filter((obj) => {
-                                  if (obj.id === item.id) {
-                                    obj.completed = "true";
-                                  }
-                                  return obj;
-                                })
-                              );
-                            }}
-                          />
-                        </CardActions>
-                        <CardContent className="todo-content">
-                          <Typography variant="h5" component="div">
-                            {item.text}
-                          </Typography>
-                          <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                            {item.date}
-                          </Typography>
-                        </CardContent>
-                        <CardActions>
-                          <IconButton
-                            aria-label="delete"
-                            onClick={(e) => {
-                              setTodoList(
-                                todoList.filter((obj) => {
-                                  if (obj.id === item.id) {
-                                    obj.status = "false";
-                                  }
-                                  return obj;
-                                })
-                              );
-                            }}
-                          >
-                            <DeleteOutlined color="primary" />
-                          </IconButton>
-                        </CardActions>
-                      </Card>
-                    );
-                  }
+                if (item.completed === "false") {
+                  return (
+                    <Card className="todo-item" sx={{ minWidth: 275 }}>
+                      <CardActions>
+                        <Checkbox
+                          onChange={(e) => {
+                            Firebase.firestore()
+                              .collection("todos")
+                              .doc(item.id)
+                              .update({
+                                completed: "true",
+                              });
+                          }}
+                        />
+                      </CardActions>
+                      <CardContent className="todo-content">
+                        <Typography variant="subtitle1" component="div">
+                          {item.text}
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          sx={{ mb: 1.5 }}
+                          color="text.secondary"
+                        >
+                          {item.date}
+                        </Typography>
+                      </CardContent>
+                      <CardActions>
+                        <IconButton
+                          aria-label="delete"
+                          onClick={(e) => {
+                            Firebase.firestore()
+                              .collection("todos")
+                              .doc(item.id)
+                              .delete();
+                          }}
+                        >
+                          <DeleteOutlined color="primary" />
+                        </IconButton>
+                      </CardActions>
+                    </Card>
+                  );
                 }
 
                 return null;
@@ -127,32 +128,39 @@ function App() {
         <Paper className="todo-container " elevation={15}>
           <div className="todo-list">
             <List>
-            <h2>Completed Task</h2>
-            <Typography variant="h6" className={todoList.length ? "display-none" : "display"}>No CompletedTask</Typography>
+              <h2>Completed Task</h2>
+              <Typography
+                variant="h6"
+                className={todoList.length ? "display-none" : "display"}
+              >
+                No CompletedTask
+              </Typography>
               {todoList.map((item) => {
-                if (item.completed === "true" && item.status === "true") {
+                if (item.completed === "true") {
                   return (
                     <Card className="todo-item" sx={{ minWidth: 275 }}>
                       <CardActions>
                         <Checkbox
                           defaultChecked
                           onChange={(e) => {
-                            setTodoList(
-                              todoList.filter((obj) => {
-                                if (obj.id === item.id) {
-                                  obj.completed = "false";
-                                }
-                                return obj;
-                              })
-                            );
+                            Firebase.firestore()
+                              .collection("todos")
+                              .doc(item.id)
+                              .update({
+                                completed: "false",
+                              });
                           }}
                         />
                       </CardActions>
                       <CardContent className="todo-content">
-                        <Typography variant="h5" component="div">
+                        <Typography variant="subtitle1" component="div">
                           {item.text}
                         </Typography>
-                        <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                        <Typography
+                          variant="caption"
+                          sx={{ mb: 1.5 }}
+                          color="text.secondary"
+                        >
                           {item.date}
                         </Typography>
                       </CardContent>
@@ -160,14 +168,10 @@ function App() {
                         <IconButton
                           aria-label="delete"
                           onClick={(e) => {
-                            setTodoList(
-                              todoList.filter((obj) => {
-                                if (obj.id === item.id) {
-                                  obj.status = "false";
-                                }
-                                return obj;
-                              })
-                            );
+                            Firebase.firestore()
+                              .collection("todos")
+                              .doc(item.id)
+                              .delete();
                           }}
                         >
                           <DeleteOutlined color="primary" />

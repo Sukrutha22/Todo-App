@@ -66,6 +66,7 @@
   width: 90%;
 }
 .todo-content {
+  padding: 10px;
   width: 67%;
   margin-left: 5px;
   display: flex;

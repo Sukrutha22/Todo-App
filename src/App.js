@@ -24,24 +24,24 @@ function App() {
   const addTodo = (e) => {
     e.preventDefault();
     Firebase.firestore().collection("todos").add({
-      id: new Date(),
+      
       text: todo,
       status: "true",
       completed: "false",
       date: date,
     });
+    Firebase.firestore().collection('todos').get().then((snapshot) => {
+      const allTodo = snapshot.docs.map((item) => {
+        console.log(item.data())
+        return {
+          ...item.data(),
+          id: item.id
+        }
+      })
+      console.log(allTodo);
+      setTodoList(allTodo)
+    })
 
-    Firebase.firestore().collection("todos").get().then((snapshot) => {
-        snapshot.forEach((obj) => {
-          setTodoList([...todoList, {
-            id: obj.data().id,
-            text: obj.data().text,
-            status: obj.data().status,
-            completed: obj.data().completed,
-            date: obj.data().date,
-          }]);
-        });
-      });
   };
 
   useEffect(() => {

@@ -69,6 +69,7 @@ function App() {
           <div className="todo-list">
             <h2>Active Task</h2>
             <List>
+              <Typography variant="h6" className={todoList.length ? "display-none" : "display"}>No Task Yet</Typography>
               {todoList.map((item) => {
                 if (item) {
                   if (item.status === "true" && item.completed === "false") {
@@ -123,10 +124,11 @@ function App() {
             </List>
           </div>
         </Paper>
-        <Paper className="todo-container" elevation={15}>
+        <Paper className="todo-container " elevation={15}>
           <div className="todo-list">
             <List>
-              <h2>Completed Task</h2>
+            <h2>Completed Task</h2>
+            <Typography variant="h6" className={todoList.length ? "display-none" : "display"}>No CompletedTask</Typography>
               {todoList.map((item) => {
                 if (item.completed === "true" && item.status === "true") {
                   return (

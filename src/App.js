@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import Firebase from "./firebaseConfig";
 import {
   Paper,
   TextField,
@@ -22,16 +23,25 @@ function App() {
 
   const addTodo = (e) => {
     e.preventDefault();
-    setTodoList([
-      ...todoList,
-      {
-        id: Date.now(),
-        text: todo,
-        status: "true",
-        date: date,
-        completed: "false",
-      },
-    ]);
+    Firebase.firestore().collection("todos").add({
+      id: new Date(),
+      text: todo,
+      status: "true",
+      completed: "false",
+      date: date,
+    });
+
+    Firebase.firestore().collection("todos").get().then((snapshot) => {
+        snapshot.forEach((obj) => {
+          setTodoList([...todoList, {
+            id: obj.data().id,
+            text: obj.data().text,
+            status: obj.data().status,
+            completed: obj.data().completed,
+            date: obj.data().date,
+          }]);
+        });
+      });
   };
 
   useEffect(() => {
@@ -106,8 +116,8 @@ function App() {
                       </Card>
                     );
                   }
-                  
                 }
+
                 return null;
               })}
             </List>

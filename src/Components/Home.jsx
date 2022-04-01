@@ -13,6 +13,7 @@ import {
   CardActions,
   List,
   Checkbox,
+  Button,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
@@ -21,6 +22,8 @@ function Home() {
   const [todo, setTodo] = useState("");
   const [todoList, setTodoList] = useState([]);
   const [date, setDate] = useState("");
+  const today = new Date();
+  const todos = Firebase.firestore().collection("todos").get();
 
   const addTodo = (e) => {
     e.preventDefault();
@@ -29,27 +32,29 @@ function Home() {
         text: todo,
         completed: "false",
         date: date,
-        id: user.uid,
+        userId: user.uid,
       });
     });
   };
 
   useEffect(() => {
-    const today = new Date();
     setDate(today.toDateString());
     Firebase.auth().onAuthStateChanged((user) => {
-        Firebase.firestore().collection("todos").get().then((snapshot) => {
-            const allTodo = snapshot.docs.map((item) => {
-              console.log(item.data());
-                return item.data().id===user.uid && {...item.data()} 
- 
-            });
-            console.log(allTodo);
-            setTodoList(allTodo);
+      Firebase.firestore()
+        .collection("todos")
+        .get()
+        .then((snapshot) => {
+          const allTodo = snapshot.docs.map((item) => {
+            console.log(item.data());
+            return (
+              item.data().userId === user.uid && { ...item.data(), id: item.id }
+            );
           });
-    })
-    
-  });
+
+          setTodoList(allTodo);
+        });
+    });
+  }, [todos]);
 
   return (
     <div className="App-container">
@@ -77,6 +82,7 @@ function Home() {
               No Task Yet
             </Typography>
             {todoList.map((item) => {
+              console.log(item.id);
               if (item.completed === "false") {
                 return (
                   <Card className="todo-item" sx={{ minWidth: 275 }}>

@@ -9,9 +9,7 @@ function Login() {
   const navigate = useNavigate();
   const submitLogin = (e) => {
     e.preventDefault();
-    Firebase.auth()
-      .signInWithEmailAndPassword(email, password)
-      .then((userCredential) => {
+    Firebase.auth().signInWithEmailAndPassword(email, password).then((userCredential) => {
         navigate("home");
       })
       .catch((error) => {

@@ -16,6 +16,7 @@ function SignUp() {
        e.preventDefault()
     Firebase.auth().createUserWithEmailAndPassword(email, password)
     .then((userCredential) => {
+        userCredential.user.updateProfile({displayName:username}).then(()=>{
         Firebase.firestore().collection('users').add({
             id:userCredential.user.uid,
             username:username,
@@ -24,7 +25,7 @@ function SignUp() {
             alert("Your account is created successfully.")
             navigate('/')
         })
-      
+    })
     })
     .catch((error) => {
         alert(error.message)

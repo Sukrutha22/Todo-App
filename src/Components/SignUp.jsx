@@ -94,7 +94,7 @@ function SignUp() {
             sx={{ mb: 2 }}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <FormControl fullWidth required sx={{ mb: 2 }}>
+          <FormControl fullWidth required sx={{ mb: 2, textAlign: "start" }}>
             <InputLabel id="demo-simple-select-label">Role</InputLabel>
             <Select
               

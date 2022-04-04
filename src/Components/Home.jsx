@@ -24,50 +24,53 @@ import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
 function Home() {
   const [todo, setTodo] = useState("");
   const [todoList, setTodoList] = useState([]);
-  const [date, setDate] = useState("");
-  const [assigneeId, setAssigneeId] = useState("");
-  const [assigneeList, setAssigneeList] = useState([]);
-  const today = new Date();
   const todos = Firebase.firestore().collection("todos").get();
   const assignees = Firebase.firestore().collection("users").get();
 
+  const today = new Date();
+  const [date, setDate] = useState("");
+  useEffect(() => {
+    setDate(today.toDateString());
+  }, [todo]);
+
+  const [assigneeId, setAssigneeId] = useState("");
+  const [assigneeList, setAssigneeList] = useState([]);
+  useEffect(()=>{
+    Firebase.firestore().collection("users").get().then(snapshot=>{
+
+      const allAssignee = snapshot.docs.map(item => {
+        return (item.data().role === "Engineer" && { assigneeId: item.data().id, assigneeName: item.data().username})
+      })
+      setAssigneeList(allAssignee)
+    })
+  },[])
+
   const addTodo = (e) => {
     e.preventDefault();
-    setDate(today.toDateString());
-    Firebase.auth().onAuthStateChanged((user) => {
+      Firebase.auth().onAuthStateChanged((user) => {
       Firebase.firestore().collection("todos").add({
         text: todo,
         completed: "false",
         date: date,
-        userId: user.uid,
+        assignorId: user.uid,
+        assigneeId: assigneeId
       });
     });
   };
 
-  const handleAssignee = (e) => {
-    e.preventDefault();
-    setAssigneeId(e.target.value);
-  };
+  const [todoListEdit, setTodoListEdit] = useState(false)
+  useEffect(()=>{
+    Firebase.auth().onAuthStateChanged(user => {
+      Firebase.firestore().collection("todos").get().then(snapshot =>{
+        const allTodo = snapshot.docs.map(item =>{
+          return (item.data().assignorId === user.uid && {...item.data(), id: item.id})
+        })
+        setTodoList(allTodo)
+      })
+    })
+  },[todoListEdit])
 
-  useEffect(() => {
-    Firebase.auth().onAuthStateChanged((user) => {
-      Firebase.firestore().collection("todos").get().then((snapshot) => {
-        const allTodo = snapshot.docs.map((item) => {
-          return (
-            item.data().userId === user.uid && { ...item.data(), id: item.id }
-          );
-        });
-
-        setTodoList(allTodo);
-      });
-    });
-    Firebase.firestore().collection("users").get().then((snapshot) => {
-      const allAssignee = snapshot.docs.map((item) => {
-        return { ...item.data() };
-      });
-      setAssigneeList(allAssignee);
-    });
-  }, [todos, assignees]);
+  
 
   return (
     <div className="App-container">
@@ -82,24 +85,24 @@ function Home() {
               sx={{ width: 4.5 / 10 }}
               onChange={(e) => setTodo(e.target.value)}
             />
-            <FormControl sx={{ width: 4.5 / 10 }}>
+            <FormControl required sx={{ width: 4.5 / 10, textAlign: "start" }}>
               <InputLabel id="demo-simple-select-label">Assignee</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={assigneeId}
                 label="Assigned To"
-                onChange={handleAssignee}
+                onChange={(e) => setAssigneeId(e.target.value)}
               >
-                {assigneeList.map((item) => {
-                  if (item.role === "Engineer") {
-                    return <MenuItem value={item.id}>{item.username}</MenuItem>;
+                {assigneeList.map(item => {
+                  if (item) {
+                    return <MenuItem key={item.assigneeId} value={item.assigneeId}> {item.assigneeName} </MenuItem>
                   }
                   return null;
                 })}
               </Select>
             </FormControl>
-            <Fab type="submit" color="primary" aria-label="add">
+            <Fab type="submit" color="primary" aria-label="add" onClick={(e)=> setTodoListEdit(prevState=> !prevState.todoListEdit)}>
               <AddIcon />
             </Fab>
           </form>
@@ -118,7 +121,7 @@ function Home() {
           {todoList.map((item) => {
             if (item.completed === "false") {
               return (
-                <Card className="todo-item" sx={{ minWidth: 275 }}>
+                <Card className="todo-item" key={item.text} sx={{ minWidth: 275 }}>
                   <CardActions>
                     <Checkbox
                       onChange={(e) => {
@@ -128,6 +131,7 @@ function Home() {
                           .update({
                             completed: "true",
                           });
+                          setTodoListEdit(prevState=> !prevState.todoListEdit)
                       }}
                     />
                   </CardActions>
@@ -151,7 +155,9 @@ function Home() {
                           .collection("todos")
                           .doc(item.id)
                           .delete();
-                      }}
+                          setTodoListEdit(prevState=> !prevState.todoListEdit)
+                      }
+                    }
                     >
                       <DeleteOutlined color="primary" />
                     </IconButton>
@@ -176,7 +182,7 @@ function Home() {
           {todoList.map((item) => {
             if (item.completed === "true") {
               return (
-                <Card className="todo-item" sx={{ minWidth: 275 }}>
+                <Card className="todo-item" key={item.text} sx={{ minWidth: 275 }}>
                   <CardActions>
                     <Checkbox
                       defaultChecked
@@ -187,6 +193,7 @@ function Home() {
                           .update({
                             completed: "false",
                           });
+                          setTodoListEdit(prevState=> !prevState.todoListEdit)
                       }}
                     />
                   </CardActions>
@@ -210,6 +217,7 @@ function Home() {
                           .collection("todos")
                           .doc(item.id)
                           .delete();
+                          setTodoListEdit(prevState=> !prevState.todoListEdit)
                       }}
                     >
                       <DeleteOutlined color="primary" />

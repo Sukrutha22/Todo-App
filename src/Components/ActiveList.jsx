@@ -14,16 +14,13 @@ import Firebase from "../firebaseConfig";
 import { TodoContext } from "./Home";
 
 function ActiveList() {
-  const { todoList } = useContext(TodoContext);
+  const { todoList, userRole } = useContext(TodoContext);
   const { setTodoListEdit } = useContext(TodoContext);
   return (
     <Paper className="todo-container" elevation={15}>
       <h2>Active Task</h2>
       <List>
-        <Typography
-          variant="h6"
-          className={todoList.length ? "display-none" : "display"}
-        >
+        <Typography variant="h6" className={todoList.length ? "display-none" : "display"}>
           No Task Yet
         </Typography>
         {todoList.map((item) => {
@@ -62,6 +59,7 @@ function ActiveList() {
                 <CardActions>
                   <IconButton
                     aria-label="delete"
+                    disabled={userRole==="Engineer"}
                     onClick={(e) => {
                       Firebase.firestore()
                         .collection("todos")
@@ -70,7 +68,7 @@ function ActiveList() {
                       setTodoListEdit((prevState) => !prevState.todoListEdit);
                     }}
                   >
-                    <DeleteOutlined color="primary" />
+                    <DeleteOutlined color={userRole==="Lead" ? "primary" : "dark"} />
                   </IconButton>
                 </CardActions>
               </Card>

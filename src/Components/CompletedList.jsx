@@ -14,7 +14,7 @@ import Firebase from "../firebaseConfig";
 import { TodoContext } from "./Home";
 
 function CompletedList() {
-  const { todoList, setTodoListEdit } = useContext(TodoContext);
+  const { todoList, setTodoListEdit, userRole } = useContext(TodoContext);
   return (
     <Paper className="todo-container " elevation={15}>
       <h2>Completed Task</h2>
@@ -62,6 +62,7 @@ function CompletedList() {
                 <CardActions>
                   <IconButton
                     aria-label="delete"
+                    disabled={userRole==="Engineer"}
                     onClick={(e) => {
                       Firebase.firestore()
                         .collection("todos")
@@ -70,7 +71,7 @@ function CompletedList() {
                       setTodoListEdit((prevState) => !prevState.todoListEdit);
                     }}
                   >
-                    <DeleteOutlined color="primary" />
+                    <DeleteOutlined color={userRole==="Lead" ? "primary" : "dark"} />
                   </IconButton>
                 </CardActions>
               </Card>

@@ -22,7 +22,7 @@ function Home() {
         .then((snapshot) => {
           const allTodo = snapshot.docs.map((item) => {
             return (
-              item.data().assignorId === user.uid && {
+              (item.data().assignorId === user.uid || item.data().assigneeId === user.uid)  && {
                 ...item.data(),
                 id: item.id,
               }
@@ -41,7 +41,7 @@ function Home() {
   }, [todoListEdit]);
 
   return (
-    <TodoContext.Provider value={{ setTodoListEdit, todoList }}>
+    <TodoContext.Provider value={{ setTodoListEdit, todoList, userRole }}>
       <div className="App-container">
         { userRole==="Lead" && <AddTicket></AddTicket>}
         

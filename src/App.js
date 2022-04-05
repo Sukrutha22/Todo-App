@@ -7,7 +7,7 @@ import SignUp from "./Components/SignUp";
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
+      <BrowserRouter basename={process.env.PUBLIC_URL}>
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="signup" element={<SignUp />} />

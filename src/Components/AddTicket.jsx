@@ -25,34 +25,34 @@ function AddTicket() {
 
   const addTodo = (e) => {
     e.preventDefault();
-    Firebase.auth().onAuthStateChanged((user) => {
-      Firebase.firestore().collection("todos").add({
-        text: todo,
-        completed: "false",
-        date: date,
-        assignorId: user.uid,
-        assigneeId: assigneeId,
-      });
-    });
+    // Firebase.auth().onAuthStateChanged((user) => {
+    //   Firebase.firestore().collection("todos").add({
+    //     text: todo,
+    //     completed: "false",
+    //     date: date,
+    //     assignorId: user.uid,
+    //     assigneeId: assigneeId,
+    //   });
+    // });
   };
 
   const [assigneeId, setAssigneeId] = useState("");
   const [assigneeList, setAssigneeList] = useState([]);
   useEffect(() => {
-    Firebase.firestore()
-      .collection("users")
-      .get()
-      .then((snapshot) => {
-        const allAssignee = snapshot.docs.map((item) => {
-          return (
-            item.data().role === "Engineer" && {
-              assigneeId: item.data().id,
-              assigneeName: item.data().username,
-            }
-          );
-        });
-        setAssigneeList(allAssignee);
-      });
+    // Firebase.firestore()
+    //   .collection("users")
+    //   .get()
+    //   .then((snapshot) => {
+    //     const allAssignee = snapshot.docs.map((item) => {
+    //       return (
+    //         item.data().role === "Engineer" && {
+    //           assigneeId: item.data().id,
+    //           assigneeName: item.data().username,
+    //         }
+    //       );
+    //     });
+    //     setAssigneeList(allAssignee);
+    //   });
   }, []);
 
  

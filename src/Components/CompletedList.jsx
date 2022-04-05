@@ -36,15 +36,15 @@ function CompletedList() {
                 <CardActions>
                   <Checkbox
                     defaultChecked
-                    onChange={(e) => {
-                      Firebase.firestore()
-                        .collection("todos")
-                        .doc(item.id)
-                        .update({
-                          completed: "false",
-                        });
-                      setTodoListEdit((prevState) => !prevState.todoListEdit);
-                    }}
+                    // onChange={(e) => {
+                    //   Firebase.firestore()
+                    //     .collection("todos")
+                    //     .doc(item.id)
+                    //     .update({
+                    //       completed: "false",
+                    //     });
+                    //   setTodoListEdit((prevState) => !prevState.todoListEdit);
+                    // }}
                   />
                 </CardActions>
                 <CardContent className="todo-content">
@@ -63,13 +63,13 @@ function CompletedList() {
                   <IconButton
                     aria-label="delete"
                     disabled={userRole==="Engineer"}
-                    onClick={(e) => {
-                      Firebase.firestore()
-                        .collection("todos")
-                        .doc(item.id)
-                        .delete();
-                      setTodoListEdit((prevState) => !prevState.todoListEdit);
-                    }}
+                    // onClick={(e) => {
+                    //   Firebase.firestore()
+                    //     .collection("todos")
+                    //     .doc(item.id)
+                    //     .delete();
+                    //   setTodoListEdit((prevState) => !prevState.todoListEdit);
+                    // }}
                   >
                     <DeleteOutlined color={userRole==="Lead" ? "primary" : "dark"} />
                   </IconButton>

@@ -15,29 +15,29 @@ function Home() {
   const [userRole, setUserRole] = useState('')
   const [todoListEdit, setTodoListEdit] = useState(false);
   useEffect(() => {
-    Firebase.auth().onAuthStateChanged((user) => {
-      Firebase.firestore()
-        .collection("todos")
-        .get()
-        .then((snapshot) => {
-          const allTodo = snapshot.docs.map((item) => {
-            return (
-              (item.data().assignorId === user.uid || item.data().assigneeId === user.uid)  && {
-                ...item.data(),
-                id: item.id,
-              }
-            );
-          });
-          setTodoList(allTodo);
-        });
-        Firebase.firestore().collection("users").get().then(snapshot=>{
-          snapshot.forEach(item=>{
-            if(item.data().id===user.uid){
-              setUserRole(item.data().role)
-            }
-          })
-        })
-    });
+    // Firebase.auth().onAuthStateChanged((user) => {
+    //   Firebase.firestore()
+    //     .collection("todos")
+    //     .get()
+    //     .then((snapshot) => {
+    //       const allTodo = snapshot.docs.map((item) => {
+    //         return (
+    //           (item.data().assignorId === user.uid || item.data().assigneeId === user.uid)  && {
+    //             ...item.data(),
+    //             id: item.id,
+    //           }
+    //         );
+    //       });
+    //       setTodoList(allTodo);
+    //     });
+    //     Firebase.firestore().collection("users").get().then(snapshot=>{
+    //       snapshot.forEach(item=>{
+    //         if(item.data().id===user.uid){
+    //           setUserRole(item.data().role)
+    //         }
+    //       })
+    //     })
+    // });
   }, [todoListEdit]);
 
   return (

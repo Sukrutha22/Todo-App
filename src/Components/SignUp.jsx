@@ -23,15 +23,10 @@ function SignUp() {
 
   const submitSignup = (e) => {
     e.preventDefault();
-    Firebase.auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then((userCredential) => {
-        userCredential.user
-          .updateProfile({ displayName: username })
-          .then(() => {
-            Firebase.firestore()
-              .collection("users")
-              .add({
+    Firebase.auth().createUserWithEmailAndPassword(email, password).then((userCredential) => {
+        userCredential.user.updateProfile({ displayName: username }).then(() => {
+            Firebase.database().ref("users"+userCredential.user.uid)
+              .set({
                 id: userCredential.user.uid,
                 username: username,
                 phoneNumber: phone,

@@ -12,14 +12,16 @@ import AddIcon from "@mui/icons-material/Add";
 import Firebase from "../firebaseConfig";
 import { TodoContext } from "./Home";
 import "../App.css";
+import moment from 'moment';
+
 
 function AddTicket() {
   const [todo, setTodo] = useState("");
   const { setTodoListEdit, usersRef } = useContext(TodoContext);
-  const today = new Date();
+  const today = moment().format("hh:mm A");
   const [date, setDate] = useState("");
   useEffect(() => {
-    setDate(today.toDateString());
+    setDate(today);
   }, [todo]);
 
   const addTodo = (e) => {

@@ -14,9 +14,8 @@ import { TodoContext } from "./Home";
 import "../App.css";
 
 function AddTicket() {
-    
   const [todo, setTodo] = useState("");
-  const { setTodoListEdit } = useContext(TodoContext);
+  const { setTodoListEdit, usersRef } = useContext(TodoContext);
   const today = new Date();
   const [date, setDate] = useState("");
   useEffect(() => {
@@ -25,39 +24,40 @@ function AddTicket() {
 
   const addTodo = (e) => {
     e.preventDefault();
-    // Firebase.auth().onAuthStateChanged((user) => {
-    //   Firebase.firestore().collection("todos").add({
-    //     text: todo,
-    //     completed: "false",
-    //     date: date,
-    //     assignorId: user.uid,
-    //     assigneeId: assigneeId,
-    //   });
-    // });
+    Firebase.auth().onAuthStateChanged((user) => {
+      Firebase.database().ref("todos").push({
+        text: todo,
+        completed: "false",
+        date: date,
+        assignorId: user.uid,
+        assigneeId: assigneeId,
+      });
+    });
   };
 
   const [assigneeId, setAssigneeId] = useState("");
   const [assigneeList, setAssigneeList] = useState([]);
+
   useEffect(() => {
-    // Firebase.firestore()
-    //   .collection("users")
-    //   .get()
-    //   .then((snapshot) => {
-    //     const allAssignee = snapshot.docs.map((item) => {
-    //       return (
-    //         item.data().role === "Engineer" && {
-    //           assigneeId: item.data().id,
-    //           assigneeName: item.data().username,
-    //         }
-    //       );
-    //     });
-    //     setAssigneeList(allAssignee);
-    //   });
+    usersRef.on("value", (snapshot) => {
+      const users = snapshot.val();
+      const usersList = [];
+      for (let id in users) {
+        usersList.push({ ...users[id] });
+      }
+      const allAssignee = usersList.map((item) => {
+        return (
+          item.role === "Engineer" && {
+            assigneeId: item.id,
+            assigneeName: item.username,
+          }
+        );
+      });
+      setAssigneeList(allAssignee);
+    });
   }, []);
 
- 
   return (
-      
     <div className="ticket-container">
       <Paper elevation={10} sx={{ width: 1 / 2 }}>
         <form className="text-input" onSubmit={addTodo}>
@@ -104,7 +104,6 @@ function AddTicket() {
         </form>
       </Paper>
     </div>
-        
   );
 }
 

@@ -31,8 +31,9 @@ function TaskList({ list, completed, completedToggle }) {
             
             <ListItem key={item.text} className="todo-item" sx={{pr: "5px"}}>
               <ListItemIcon sx={{ justifyContent: "center" }}>
-                <Checkbox
+                <Checkbox 
                 defaultChecked={completed === "true"}
+                color={completed==="true" ? "default" : "primary"}
                   onChange={(e) => {
                     Firebase.database().ref(`todos/${item.id}`).update({
                       completed: completedToggle,
@@ -42,7 +43,7 @@ function TaskList({ list, completed, completedToggle }) {
                 />
               </ListItemIcon>
               <div className="todo-content">
-                <Typography variant="h6" component="div">
+                <Typography variant="h6"  color={completed==="true" ? "GrayText" : "black"} style={{textDecoration: completed==="true" ? "line-through" : "none"}} >
                   {item.text}
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
@@ -60,7 +61,7 @@ function TaskList({ list, completed, completedToggle }) {
                   }}
                 >
                   <DeleteOutlined
-                    color={userRole === "Lead" ? "primary" : "dark"}
+                    color={(userRole === "Lead" && completed==="false") ? "primary" : "dark"}
                   />
                 </IconButton>
               </ListItemIcon>

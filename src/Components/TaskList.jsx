@@ -24,12 +24,15 @@ function TaskList({ list, completed, completedToggle }) {
       >
         {list ? "12 Tasks" : "No Tasks Yet"}
       </Typography>
+      <div className="list-items">
       {todoList.map((item) => {
         if (item.completed === completed) {
           return (
-            <ListItem key={item.text} className="todo-item">
+            
+            <ListItem key={item.text} className="todo-item" sx={{pr: "5px"}}>
               <ListItemIcon sx={{ justifyContent: "center" }}>
                 <Checkbox
+                defaultChecked={completed === "true"}
                   onChange={(e) => {
                     Firebase.database().ref(`todos/${item.id}`).update({
                       completed: completedToggle,
@@ -62,10 +65,12 @@ function TaskList({ list, completed, completedToggle }) {
                 </IconButton>
               </ListItemIcon>
             </ListItem>
+            
           );
         }
         return null;
       })}
+      </div>
     </List>
   );
 }

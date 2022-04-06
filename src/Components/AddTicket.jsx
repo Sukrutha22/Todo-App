@@ -35,6 +35,8 @@ function AddTicket() {
         assigneeId: assigneeId,
       });
     });
+    setTodo('')
+    setAssigneeId('')
   };
 
   const [assigneeId, setAssigneeId] = useState("");
@@ -67,6 +69,7 @@ function AddTicket() {
             required
             id="outlined-basic"
             label="Add Ticket"
+            value={todo}
             variant="outlined"
             sx={{ width: 4.5 / 10 }}
             onChange={(e) => setTodo(e.target.value)}

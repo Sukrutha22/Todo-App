@@ -2,10 +2,9 @@ import React, { createContext } from "react";
 import { useEffect, useState } from "react";
 import "../App.css";
 import Firebase from "../firebaseConfig";
-
 import AddTicket from "./AddTicket";
-import ActiveList from "./ActiveList";
-import CompletedList from "./CompletedList";
+import Active from "./Active";
+import Completed from "./Completed";
 
 export const TodoContext = createContext(null);
 
@@ -50,8 +49,8 @@ function Home() {
       <div className="App-container">
         {userRole === "Lead" && <AddTicket></AddTicket>}
 
-        <ActiveList></ActiveList>
-        <CompletedList></CompletedList>
+        <Active></Active>
+        <Completed></Completed>
       </div>
     </TodoContext.Provider>
   );

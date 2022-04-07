@@ -9,7 +9,7 @@ function Completed() {
   const list = todoList.some((item) => item.completed === "true");
   return (
     <Paper className="todo-container" elevation={24} square>
-      {/* <Calender /> */}
+      <Calender />
       <TaskList list={list} completed="true" completedToggle="false" />
     </Paper>
   );

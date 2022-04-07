@@ -5,34 +5,50 @@ import moment from "moment";
 function Calendar() {
   const today = moment();
 
-  const month = today.format("dddd, MMMM D");
+  const startDay = today.clone().startOf("month");
+  const endDay = today.clone().endOf("month");
+  const days = startDay.clone().subtract(1, "day");
+  const calendar = [];
+  while (days.isBefore(endDay, "day")) {
+    calendar.push(Array([]).map(() => days.add(1, "day").clone()));
+  }
+
+  const tomorrow = moment().add(1, "days");
+  const yesterday = moment().subtract(1, "days");
   const [selectDate, setSelectDate] = useState(today);
+  const [day, setDay] = useState("");
+  useEffect(() => {
+    if (selectDate.isSame(today, "day")) {
+      setDay("Today");
+    } else if (selectDate.isSame(yesterday, "day")) {
+      setDay("Yesterday");
+    } else if (selectDate.isSame(tomorrow, "day")) {
+      setDay("Tomorrow");
+      console.log("is same true");
+    } else if (selectDate.isBefore(today, "days")) {
+      setDay(moment(selectDate).fromNow());
+      console.log("is before true");
+    } else if (selectDate.isAfter(today, "days")) {
+      setDay("In " + moment(today).to(selectDate, true));
+      console.log("is after true");
+    }
+  }, [selectDate]);
 
   const [value, setValue] = useState(parseInt(today.format("D")) - 1);
   const handleDate = (e, newValue) => {
     e.preventDefault();
     setValue(newValue);
     setSelectDate(...calendar[newValue]);
-    console.log(newValue);
   };
-
-  const startDay = today.clone().startOf("month");
-  const endDay = today.clone().endOf("month");
-  const day = startDay.clone().subtract(1, "day");
-  const calendar = [];
-
-  while (day.isBefore(endDay, "day")) {
-    calendar.push(Array([]).map(() => day.add(1, "day").clone()));
-  }
 
   return (
     <div className="cal-wrapper">
       <div className="cal-head">
         <Typography variant="subtitle1" color={"gray"}>
-          {month}
+          {selectDate.format("dddd, MMM D")}
         </Typography>
         <Typography variant="h3" sx={{ fontWeight: "bold" }}>
-          {selectDate.format("D")}
+          {day}
         </Typography>
       </div>
 

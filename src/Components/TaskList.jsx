@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   List,
   Typography,
@@ -11,9 +11,10 @@ import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
 import Firebase from "../firebaseConfig";
 import { TodoContext } from "./Home";
 
-function TaskList({ list, completed, completedToggle }) {
-  const { todoList, userRole } = useContext(TodoContext);
+function TaskList({ list, taskList, completedToggle }) {
+  const { userRole } = useContext(TodoContext);
   const { setTodoListEdit } = useContext(TodoContext);
+  const taskNumber = taskList.length;
 
   return (
     <List sx={list ? null : { justifyContent: "center" }}>
@@ -22,18 +23,16 @@ function TaskList({ list, completed, completedToggle }) {
         component="div"
         sx={list ? { alignSelf: "flex-start", my: "10px" } : null}
       >
-        {list ? "12 Tasks" : "No Tasks Yet"}
+        {list ? `${taskNumber} Tasks` : "No Tasks Yet"}
       </Typography>
       <div className="list-items">
-      {todoList.map((item) => {
-        if (item.completed === completed) {
+        {taskList.map((item) => {
           return (
-            
-            <ListItem key={item.text} className="todo-item" sx={{pr: "5px"}}>
+            <ListItem key={item.text} className="todo-item" sx={{ pr: "5px" }}>
               <ListItemIcon sx={{ justifyContent: "center" }}>
-                <Checkbox 
-                defaultChecked={completed === "true"}
-                color={completed==="true" ? "default" : "primary"}
+                <Checkbox
+                  defaultChecked={item.completed === "true"}
+                  color={item.completed === "true" ? "default" : "primary"}
                   onChange={(e) => {
                     Firebase.database().ref(`todos/${item.id}`).update({
                       completed: completedToggle,
@@ -43,7 +42,14 @@ function TaskList({ list, completed, completedToggle }) {
                 />
               </ListItemIcon>
               <div className="todo-content">
-                <Typography variant="h6"  color={completed==="true" ? "GrayText" : "black"} style={{textDecoration: completed==="true" ? "line-through" : "none"}} >
+                <Typography
+                  variant="h6"
+                  color={item.completed === "true" ? "GrayText" : "black"}
+                  style={{
+                    textDecoration:
+                      item.completed === "true" ? "line-through" : "none",
+                  }}
+                >
                   {item.text}
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
@@ -61,16 +67,17 @@ function TaskList({ list, completed, completedToggle }) {
                   }}
                 >
                   <DeleteOutlined
-                    color={(userRole === "Lead" && completed==="false") ? "primary" : "dark"}
+                    color={
+                      userRole === "Lead" && item.completed === "false"
+                        ? "primary"
+                        : "dark"
+                    }
                   />
                 </IconButton>
               </ListItemIcon>
             </ListItem>
-            
           );
-        }
-        return null;
-      })}
+        })}
       </div>
     </List>
   );

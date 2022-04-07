@@ -1,7 +1,7 @@
 import { Paper } from "@mui/material";
 import React, { useContext } from "react";
 import TaskList from "./TaskList";
-import Calender from "./Calender";
+import Calendar from "./Calendar";
 import { TodoContext } from "./Home";
 
 function Active() {
@@ -10,7 +10,7 @@ function Active() {
 
   return (
     <Paper className="todo-container" elevation={24} square>
-      <Calender/>
+      <Calendar/>
       <TaskList list={list} completed="false" completedToggle="true" />
     </Paper>
   );

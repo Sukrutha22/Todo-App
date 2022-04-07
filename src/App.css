@@ -32,8 +32,9 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  width: 23vw;
+  width: 18vw;
   height: 70vh;
+  padding: 25px 45px;
 }
 
 .text-input {
@@ -65,7 +66,7 @@
 .todo-container ul {
   height: -webkit-fill-available;
   width: -webkit-fill-available;
-  margin: 5px;
+  margin-top: 10px;
     padding: 0;
   display: flex;
   flex-direction: column;
@@ -73,9 +74,9 @@
   list-style: none;
 overflow: hidden;
 }
+
 .list-items{
-  width: 100%;
-    margin-left: 15px;
+  width: 115%;
   overflow-y: auto;
 }
 
@@ -95,4 +96,14 @@ overflow: hidden;
 }
 .todo-content p {
   margin: 5px 0;
+}
+.cal-wrapper{
+  width: 130%;
+  text-align: left;
+  margin-bottom: 20px;
+}
+.cal-head{
+  width: 78%;
+    padding: 0 50px;
+    margin-bottom: 10px;
 }

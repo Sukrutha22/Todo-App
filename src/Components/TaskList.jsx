@@ -16,11 +16,11 @@ function TaskList({ list, completed, completedToggle }) {
   const { setTodoListEdit } = useContext(TodoContext);
 
   return (
-    <List sx={list ? "" : { justifyContent: "center" }}>
+    <List sx={list ? null : { justifyContent: "center" }}>
       <Typography
         variant="subtitle1"
         component="div"
-        sx={list ? { alignSelf: "flex-start", ml: "35px" } : null}
+        sx={list ? { alignSelf: "flex-start", my: "10px" } : null}
       >
         {list ? "12 Tasks" : "No Tasks Yet"}
       </Typography>

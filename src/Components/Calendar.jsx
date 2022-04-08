@@ -1,12 +1,33 @@
-import { Typography, Tabs, Tab } from "@mui/material";
+import { Typography, Tabs, Tab, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 function Calendar() {
   const today = moment();
 
-  const startDay = today.clone().startOf("month");
-  const endDay = today.clone().endOf("month");
+  
+
+  const [value, setValue] = useState(parseInt(today.format("D")) - 1);
+  const handleDate = (e, newValue) => {
+    e.preventDefault();
+    setValue(newValue);
+    setSelectDate(...calendar[newValue]);
+  };
+
+  const [selectMonth, setSelectMonth] = useState(today.clone())
+  const nextMonth=(e)=>{
+    e.preventDefault()
+    setSelectMonth(prevState=> prevState.clone().add(1, "month"))
+  }
+  const prevMonth=(e)=>{
+    e.preventDefault()
+    setSelectMonth(prevState=> prevState.clone().subtract(1, "month"))
+  }
+
+  const startDay = selectMonth.clone().startOf("month");
+  const endDay = selectMonth.clone().endOf("month");
   const days = startDay.clone().subtract(1, "day");
   const calendar = [];
   while (days.isBefore(endDay, "day")) {
@@ -24,22 +45,13 @@ function Calendar() {
       setDay("Yesterday");
     } else if (selectDate.isSame(tomorrow, "day")) {
       setDay("Tomorrow");
-      console.log("is same true");
     } else if (selectDate.isBefore(today, "days")) {
       setDay(moment(selectDate).fromNow());
-      console.log("is before true");
     } else if (selectDate.isAfter(today, "days")) {
       setDay("In " + moment(today).to(selectDate, true));
-      console.log("is after true");
     }
+    console.log(today.clone().add(2, "month"));
   }, [selectDate]);
-
-  const [value, setValue] = useState(parseInt(today.format("D")) - 1);
-  const handleDate = (e, newValue) => {
-    e.preventDefault();
-    setValue(newValue);
-    setSelectDate(...calendar[newValue]);
-  };
 
   return (
     <div className="cal-wrapper">
@@ -52,6 +64,16 @@ function Calendar() {
         </Typography>
       </div>
 
+      <div className="month-wrapper">
+        <IconButton onClick={prevMonth}>
+          <ChevronLeftIcon color="primary"></ChevronLeftIcon>
+        </IconButton>
+        <Typography sx={{width: 7/10, display: "flex" , justifyContent: "center",  }}>{selectMonth.format("MMMM")}</Typography>
+        <IconButton onClick={nextMonth}>
+          <ChevronRightIcon color="primary"></ChevronRightIcon>
+        </IconButton>
+        
+      </div>
       <Tabs
         value={value}
         onChange={handleDate}

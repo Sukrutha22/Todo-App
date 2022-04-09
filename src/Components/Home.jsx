@@ -5,6 +5,8 @@ import Firebase from "../firebaseConfig";
 import AddTicket from "./AddTicket";
 import Active from "./Active";
 import Completed from "./Completed";
+import moment from 'moment';
+
 
 export const TodoContext = createContext(null);
 
@@ -13,7 +15,8 @@ function Home() {
   const [userRole, setUserRole] = useState("");
   const [todoListEdit, setTodoListEdit] = useState(false);
   const usersRef = Firebase.database().ref("users/");
-  const todosRef = Firebase.database().ref("todos/");
+  const todoMonth = moment().format("YYYY/MMM")
+  const todosRef = Firebase.database().ref(`${todoMonth}/`);
 
   useEffect(() => {
     Firebase.auth().onAuthStateChanged((user) => {
@@ -44,7 +47,7 @@ function Home() {
 
   return (
     <TodoContext.Provider
-      value={{ setTodoListEdit, todoList, userRole, usersRef }}
+      value={{ setTodoListEdit, todoList, userRole, usersRef, todoMonth }}
     >
       <div className="App-container">
         {userRole === "Lead" && <AddTicket></AddTicket>}

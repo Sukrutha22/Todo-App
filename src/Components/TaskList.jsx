@@ -13,7 +13,7 @@ import { TodoContext } from "./Home";
 
 function TaskList({ list, taskList, completedToggle }) {
   const { userRole } = useContext(TodoContext);
-  const { setTodoListEdit } = useContext(TodoContext);
+  const { setTodoListEdit, todoMonth } = useContext(TodoContext);
   const taskNumber = taskList.length;
 
   return (
@@ -26,7 +26,7 @@ function TaskList({ list, taskList, completedToggle }) {
         {list ? `${taskNumber} Tasks` : "No Tasks Yet"}
       </Typography>
       <div className="list-items">
-        {taskList.map((item) => {
+        {taskList.map((item, index) => {
           return (
             <ListItem key={item.text} className="todo-item" sx={{ pr: "5px" }}>
               <ListItemIcon sx={{ justifyContent: "center" }}>
@@ -34,10 +34,10 @@ function TaskList({ list, taskList, completedToggle }) {
                   defaultChecked={item.completed === "true"}
                   color={item.completed === "true" ? "default" : "primary"}
                   onChange={(e) => {
-                    Firebase.database().ref(`todos/${item.id}`).update({
+                    Firebase.database().ref(`${todoMonth}/${item.id}`).update({
                       completed: completedToggle,
                     });
-                    setTodoListEdit((prevState) => !prevState.todoListEdit);
+                    setTodoListEdit((prevState) => !prevState.todoList);
                   }}
                 />
               </ListItemIcon>
@@ -62,8 +62,8 @@ function TaskList({ list, taskList, completedToggle }) {
                   sx={{ justifyContent: "center" }}
                   disabled={userRole === "Engineer"}
                   onClick={(e) => {
-                    Firebase.database().ref(`todos/${item.id}`).remove();
-                    setTodoListEdit((prevState) => !prevState.todoListEdit);
+                    Firebase.database().ref(`${todoMonth}/${item.id}`).remove();
+                    setTodoListEdit((prevState) => !prevState.todoList);
                   }}
                 >
                   <DeleteOutlined

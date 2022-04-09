@@ -107,3 +107,8 @@ overflow: hidden;
     padding: 0 50px;
     margin-bottom: 10px;
 }
+.month-wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

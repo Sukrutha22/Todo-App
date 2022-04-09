@@ -17,22 +17,27 @@ import moment from 'moment';
 
 function AddTicket() {
   const [todo, setTodo] = useState("");
-  const { setTodoListEdit, usersRef } = useContext(TodoContext);
-  const today = moment().format("hh:mm A");
-  const [date, setDate] = useState("");
+  const { setTodoListEdit, usersRef, todoMonth } = useContext(TodoContext);
+  const Time = moment().format("hh:mm A");
+  const Date = moment().format("L")
+  
+  const [time, setDate] = useState("");
+  const [createdOn, setCreatedOn] = useState("")
   useEffect(() => {
-    setDate(today);
+    setDate(Time);
+    setCreatedOn(Date)
   }, [todo]);
 
   const addTodo = (e) => {
     e.preventDefault();
     Firebase.auth().onAuthStateChanged((user) => {
-      Firebase.database().ref("todos").push({
+      Firebase.database().ref(todoMonth).push({
         text: todo,
         completed: "false",
-        date: date,
+        time: time,
         assignorId: user.uid,
         assigneeId: assigneeId,
+        createdOn: createdOn
       });
     });
     setTodo('')
@@ -101,7 +106,7 @@ function AddTicket() {
             color="primary"
             aria-label="add"
             onClick={(e) =>
-              setTodoListEdit((prevState) => !prevState.todoListEdit)
+              setTodoListEdit((prevState) => !prevState.todoList)
             }
           >
             <AddIcon />
